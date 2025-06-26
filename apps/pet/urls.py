@@ -1,7 +1,10 @@
-from django.urls import path
-from . import views
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import PetViewSet
+
+router = DefaultRouter()
+router.register(r'pets', PetViewSet, basename='pet')
 
 urlpatterns = [
-    path('api/v1/pets/', views.pet_list, name='pet-list'),
-    path('api/v1/pets/<int:pk>/', views.pet_detail, name='pet-detail'),
+    path('api/v1/', include(router.urls)),
 ]
