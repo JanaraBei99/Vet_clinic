@@ -42,8 +42,10 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'drf_yasg',
 
-    'users',
-    'reference'
+    'apps.users',
+    'apps.reference',
+    'apps.pet',
+    'apps.application'
 ]
 
 MIDDLEWARE = [
@@ -57,6 +59,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'core.urls'
+AUTH_USER_MODEL = "users.User"
 
 TEMPLATES = [
     {
@@ -151,4 +154,15 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': False,
     'ALGORITHM': 'HS256',  # Algorithm used to encode tokens
     'SIGNING_KEY': 'your-secret-key',  # Replace with your secret key
+}
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': 'JWT авторизация. Пример: Bearer <токен>',
+        }
+    },
+    'USE_SESSION_AUTH': False,
 }

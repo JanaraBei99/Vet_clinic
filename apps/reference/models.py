@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -55,7 +54,7 @@ class RefProduct(BaseReference):
 
 class RefShop(BaseReference):
     description = models.TextField(blank=True, null=True)
-    user = models.ForeignKey(User, models.CASCADE)
+    user = models.ForeignKey("users.User", models.CASCADE)
 
     class Meta:
         db_table = 'ref_shop'

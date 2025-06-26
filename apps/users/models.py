@@ -1,9 +1,14 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.translation import gettext_lazy as _
+
+
+class User(AbstractUser):
+    pass
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.ForeignKey("reference.RefRole", on_delete=models.CASCADE, blank=True, null=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
     preferred_language = models.CharField(max_length=20, blank=True, null=True)
@@ -19,15 +24,15 @@ class Profile(models.Model):
     website = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     logo = models.CharField(max_length=255, blank=True, null=True)
-    name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    surname = models.CharField(max_length=50)
+    first_name = models.CharField(max_length=50, blank=True, null=True)
+    last_name = models.CharField(max_length=50, blank=True, null=True)
+    third_name = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta:
         db_table = 'profile'
 
     def __str__(self):
-        return f'{self.last_name} {self.name}'
+        return f'{self.last_name} {self.last_name}'
 
 
 class Knowledge(models.Model):

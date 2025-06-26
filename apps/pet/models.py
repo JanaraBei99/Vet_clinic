@@ -1,6 +1,5 @@
-from django.contrib.auth.models import User
 from django.db import models
-from reference.models import RefTypeOfAnimal, RefBreed
+from apps.reference.models import RefTypeOfAnimal, RefBreed
 
 
 class Pet(models.Model):
@@ -9,7 +8,7 @@ class Pet(models.Model):
     birth_date = models.DateField(blank=True, null=True)
     image_url = models.URLField(max_length=255, blank=True, null=True)
     special_notes = models.TextField(blank=True, null=True)
-    user = models.ForeignKey(User, models.CASCADE)
+    user = models.ForeignKey("users.User", models.CASCADE)
 
     class Meta:
         db_table = 'pet'

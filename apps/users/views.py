@@ -1,33 +1,34 @@
 from rest_framework import status, permissions
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import RegisterSerializer, LoginSerializer
+
+from .models import Profile
+from .serializers import RegisterSerializer, LoginSerializer, ProfileCreateSerializer
 
 
 class RegisterView(GenericAPIView):
     permission_classes = [permissions.AllowAny]
     serializer_class = RegisterSerializer
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-
-        if serializer.is_valid():
-            username = serializer.validated_data['username']
-            password = serializer.validated_data['password']
-
-            try:
-                user = User.objects.create_user(username=username, password=password)
-                return Response({
-                    'username': user.username,
-                }, status=status.HTTP_201_CREATED)
-            except Exception as e:
-                return Response({
-                    'error': f"Ошибка создания пользователя: {str(e)}"
-                }, status=status.HTTP_400_BAD_REQUEST)
-
+        if serializer.is_valid(raise_exception=True):
+            user = serializer.save()
+            Profile.objects.create(
+                user=user,
+                first_name=request.data.get('first_name'),
+                last_name=request.data.get('last_name'),
+                third_name=request.data.get('third_name'),
+            )
+            return Response({
+                "message": "Пользователь успешно зарегистрирован",
+                "user": {
+                    "username": user.username,
+                    "email": user.email,
+                }
+            }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -37,7 +38,6 @@ class LoginView(GenericAPIView):
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
-
         if serializer.is_valid():
             username = serializer.validated_data['username']
             password = serializer.validated_data['password']
@@ -55,3 +55,23 @@ class LoginView(GenericAPIView):
             }, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LogoutView(GenericAPIView):
+    pass
+
+
+
+class ProfileUpdateView(GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ProfileCreateSerializer
+
+    def get_object(self):
+        return self.request.user.profile
+
+    def put(self, request, *args, **kwargs):
+        profile = self.get_object()
+        serializer = self.get_serializer(instance=profile, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)

@@ -1,6 +1,6 @@
 from django.db import models
 
-from pet.models import Pet
+from apps.pet.models import Pet
 
 
 class MedRecord(models.Model):
