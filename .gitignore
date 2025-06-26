@@ -18,3 +18,8 @@ staticfiles/
 
 # Secrets
 .env
+
+# Migrations
+**/migrations/*.py
+**/migrations/*.pyc
+!**/migrations/__init__.py
