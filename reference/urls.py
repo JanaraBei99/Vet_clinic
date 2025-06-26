@@ -1,17 +1,22 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+
 from .views import (
-    RoleViewSet, ProductCategoryViewSet, BreedViewSet,
-    AnimalSpeciesViewSet, MedicationViewSet, VetStoreViewSet
+    RoleViewSet,
+    ProductCategoryViewSet,
+    BreedViewSet,
+    AnimalTypeViewSet,
+    MedicalProductViewSet,
+    VetPharmacyViewSet
 )
 
 router = DefaultRouter()
-router.register(r'roles', RoleViewSet)
-router.register(r'product-categories', ProductCategoryViewSet)
-router.register(r'breeds', BreedViewSet)
-router.register(r'animal-species', AnimalSpeciesViewSet)
-router.register(r'medications', MedicationViewSet)
-router.register(r'vet-stores', VetStoreViewSet)
+router.register(r'roles', RoleViewSet, basename='role')
+router.register(r'categories', ProductCategoryViewSet, basename='category')
+router.register(r'breeds', BreedViewSet, basename='breed')
+router.register(r'animal-types', AnimalTypeViewSet, basename='animaltype')
+router.register(r'medical-products', MedicalProductViewSet, basename='medicalproduct')
+router.register(r'vet-pharmacies', VetPharmacyViewSet, basename='vetpharmacy')
 
 urlpatterns = [
     path('api/v1/', include(router.urls)),
