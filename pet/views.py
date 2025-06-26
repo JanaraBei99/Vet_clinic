@@ -6,6 +6,25 @@ from .models import Pet
 from .serializers import PetSerializer
 
 
+# class PetViewSet(viewsets.ModelViewSet):
+#     queryset = Pet.objects.all()
+#     serializer_class = PetSerializer
+#
+#     def get_serializer_class(self):
+#         if self.action == 'list':
+#             return PetListSerializer
+#         elif self.action == 'retrieve':
+#             return PetRetrieveSerializer
+#         elif self.action == 'create' or self.action == 'update' or self.action == 'partial_update':
+#             return PetCreateChangeSerializer
+#
+#     def post(self, request, *args, **kwargs):
+#         pass
+#     def list(self, request, *args, **kwargs):
+#         pass
+#     def retrieve(self, request, *args, **kwargs):
+#         pass
+
 @api_view(['GET', 'POST'])
 def pet_list(request):
     if request.method == 'GET':
