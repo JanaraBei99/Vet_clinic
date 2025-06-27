@@ -39,6 +39,7 @@ urlpatterns = [
     path("api/v1/", include([
         path("auth/", include("apps.users.urls")),
         path("reference/", include("apps.reference.urls")),
+        path("pet/", include("apps.pet.urls")),
     ])),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
