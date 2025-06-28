@@ -16,7 +16,7 @@ class RegisterView(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
-            Profile.objects.create(
+            profile = Profile.objects.create(
                 user=user,
                 first_name=request.data.get('first_name'),
                 last_name=request.data.get('last_name'),
@@ -27,6 +27,7 @@ class RegisterView(GenericAPIView):
                 "user": {
                     "username": user.username,
                     "email": user.email,
+                    "profile": profile.id,
                 }
             }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
