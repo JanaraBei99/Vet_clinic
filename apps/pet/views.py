@@ -10,9 +10,9 @@ from .serializers import (
 
 class PetViewSet(viewsets.ModelViewSet):
     queryset = Pet.objects.all()
-    serializer_class
-    filter_backends =[SearchFilter]
-    filterset_class = AssistentFilter
+    # serializer_class =
+    # filter_backends =[SearchFilter]
+    # filterset_class = AssistentFilter
 
 
     def get_serializer_class(self):
