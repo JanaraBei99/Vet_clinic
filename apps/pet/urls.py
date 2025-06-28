@@ -5,4 +5,8 @@ from .views import PetViewSet
 router = DefaultRouter()
 router.register(r'', PetViewSet, basename='pet')
 
-urlpatterns = router.urls
+urlpatterns = [
+    #TODO добавить количество питомцев
+]
+
+urlpatterns = urlpatterns + router.urls
