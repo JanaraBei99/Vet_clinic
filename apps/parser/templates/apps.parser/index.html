@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Цитаты и статья</title>
+    <style>
+        .article-card {
+            background-size: cover;
+            background-position: center;
+            padding: 60px 20px;
+            color: white;
+            text-shadow: 1px 1px 2px #000;
+            border-radius: 12px;
+            margin-bottom: 40px;
+        }
+        .article-card a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Цитаты</h1>
+    <ul>
+        {% for item in quotes %}
+            <li>
+                <blockquote>{{ item.text }}</blockquote>
+                <small>— {{ item.author }}</small>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h1>Публикация</h1>
+    <div class="article-card" style="background-image: url('{{ article.image }}');">
+        <h2>{{ article.date }}</h2>
+        <p>{{ article.description }}</p>
+        <a href="{{ article.link }}" target="_blank">Читать полную статью</a>
+    </div>
+</body>
+</html>
