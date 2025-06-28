@@ -2,19 +2,21 @@ from django.shortcuts import render
 
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from .models import RefAssistant
+from .models import Assistant
 from .serializers import (
-    RefAssistantListSerializer,
-    RefAssistantRetrieveSerializer,
-    RefAssistantCreateSerializer,
-    RefAssistantUpdateSerializer
+    AssistantListSerializer,
+    AssistantRetrieveSerializer,
+    AssistantCreateSerializer,
+    AssistantUpdateSerializer,
+
 )
 
+
 class RefAssistantViewSet(viewsets.ModelViewSet):
-    queryset = RefAssistant.objects.all()
+    queryset = Assistant.objects.all()
 
     def get_queryset(self):
-        queryset = RefAssistant.objects.all()
+        queryset = Assistant.objects.all()
 
         # Фильтрация по статусу: ?is_done=true или false
         is_done = self.request.query_params.get('is_done')
@@ -28,13 +30,13 @@ class RefAssistantViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == 'list':
-            return RefAssistantListSerializer
+            return AssistantListSerializer
         elif self.action == 'retrieve':
-            return RefAssistantRetrieveSerializer
+            return AssistantRetrieveSerializer
         elif self.action == 'create':
-            return RefAssistantCreateSerializer
+            return AssistantCreateSerializer
         elif self.action in ['update', 'partial_update']:
-            return RefAssistantUpdateSerializer
+            return AssistantUpdateSerializer
 
     def list(self, request, *args, **kwargs):
         serializer = self.get_serializer(self.get_queryset(), many=True)
@@ -61,4 +63,3 @@ class RefAssistantViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         self.get_object().delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-

@@ -3,6 +3,6 @@ from rest_framework.routers import DefaultRouter
 from .views import RefAssistantViewSet
 
 router = DefaultRouter()
-router.register(r'reminders', RefAssistantViewSet, basename='reminder')
+router.register(r'reminder', RefAssistantViewSet, basename='reminder')
 
 urlpatterns = router.urls

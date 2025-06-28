@@ -1,22 +1,26 @@
 from rest_framework import serializers
-from .models import RefAssistant
+from .models import Assistant
 
-class RefAssistantListSerializer(serializers.ModelSerializer):
+
+class AssistantListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = RefAssistant
+        model = Assistant
         fields = '__all__'
 
-class RefAssistantRetrieveSerializer(serializers.ModelSerializer):
+
+class AssistantRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
-        model = RefAssistant
+        model = Assistant
         fields = '__all__'
 
-class RefAssistantCreateSerializer(serializers.ModelSerializer):
+
+class AssistantCreateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = RefAssistant
+        model = Assistant
         fields = '__all__'
 
-class RefAssistantUpdateSerializer(serializers.ModelSerializer):
+
+class AssistantUpdateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = RefAssistant
+        model = Assistant
         fields = '__all__'
