@@ -4,8 +4,10 @@ from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import Profile
-from .serializers import RegisterSerializer, LoginSerializer, ProfileCreateSerializer
+from api.utils.email_service import EmailService
+from .models import Profile, User
+from .serializers import RegisterSerializer, LoginSerializer, ProfileCreateSerializer, EmaiSendSerializer, \
+    EmailVerifyCodeSerializer
 
 
 class RegisterView(GenericAPIView):
@@ -62,7 +64,6 @@ class LogoutView(GenericAPIView):
     pass
 
 
-
 class ProfileUpdateView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ProfileCreateSerializer
@@ -76,3 +77,30 @@ class ProfileUpdateView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class SendCodeView(GenericAPIView):
+    serializer_class = EmaiSendSerializer
+
+    def post(self, request):
+        user = User.objects.get(pk=request.user.id)
+        if not user.is_authenticated:
+            return Response({"message": "Пользователь не авторизован"}, status=status.HTTP_401_UNAUTHORIZED)
+        service = EmailService()
+        if service.generate_and_send_code(user):
+            return Response({"message": "Код отправлен"}, status=status.HTTP_200_OK)
+        return Response({"message": "Ошибка при отправке"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class VerifyCodeView(GenericAPIView):
+    serializer_class = EmailVerifyCodeSerializer
+
+    def post(self, request):
+        user = request.user
+        if not user.is_authenticated:
+            return Response({"message": "Пользователь не авторизован"}, status=status.HTTP_401_UNAUTHORIZED)
+        code = request.data.get('code')
+        service = EmailService()
+        if service.verify_code(user, code):
+            return Response({"message": "Код подтвержден"}, status=status.HTTP_200_OK)
+        return Response({"message": "Неверный или просроченный код"}, status=status.HTTP_400_BAD_REQUEST)
