@@ -59,3 +59,11 @@ class ProfileCreateSerializer(serializers.ModelSerializer):
             "last_name",
             "third_name",
         )
+
+class EmaiSendSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class EmailVerifyCodeSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
+    code = serializers.CharField()
