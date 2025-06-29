@@ -1,5 +1,6 @@
 from rest_framework import viewsets
 from rest_framework.filters import SearchFilter
+from .models import RefProduct
 from .models import RefShop, RefProductCategory, RefBreed, RefRole, RefTypeOfAnimal, RefProduct
 from .serializers import (
     RefRoleSerializer,
@@ -40,12 +41,4 @@ class RefProductViewSet(viewsets.ModelViewSet):
     queryset = RefProduct.objects.all()
     serializer_class = RefProductSerializer
     filter_backends = [SearchFilter]
-    search_fields = ['name']
-
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        query = self.request.query_params.get('search', None)
-        if query:
-            queryset = queryset.filter(name__icontains=query)
-        return queryset
+    search_fields = ['name_ru']  # поиск по name_ru (русское название товара)

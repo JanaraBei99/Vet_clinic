@@ -44,3 +44,4 @@ class RefProductSerializer(serializers.ModelSerializer):
         model = RefProduct
         fields = '__all__'
 
+
