@@ -1,14 +1,17 @@
 from django.db import models
+import uuid
+from django.utils import timezone
 
-class ArticleView(models.Model):
-    ip_address = models.GenericIPAddressField(null=True, blank=True)  # Добавили поле
+class Parsing(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
     title = models.CharField(max_length=255)
     excerpt = models.TextField()
     imageUrl = models.URLField(null=True, blank=True)
     category = models.CharField(max_length=100, null=True, blank=True)
     publishedDate = models.CharField(max_length=100)
     sourceUrl = models.URLField(unique=True)
-    viewed_at = models.DateTimeField(auto_now_add=True)
+    viewed_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
         ordering = ['-viewed_at']

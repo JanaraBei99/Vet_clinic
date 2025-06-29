@@ -1,43 +1,66 @@
 from django.http import JsonResponse
-from .scraper import parse_all_articles
-from .models import ArticleView
-from .utils import get_client_ip
 from django.db import models
+from rest_framework import viewsets
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.db.models import Count
+from .models import Parsing
+from .serializers import ParsingSerializer
+from .scraper import parse_all_articles
+from .utils import get_client_ip
 
-def get_article_data(request):
-    articles = parse_all_articles()
-    if not isinstance(articles, list):
-        articles = [articles]
+class ArticleDataView(APIView):
+    def get(self, request, *args, **kwargs):
+        articles = parse_all_articles()
+        if not isinstance(articles, list):
+            articles = [articles]
 
-    ip = get_client_ip(request)
+        ip = get_client_ip(request)
 
-    for article in articles:
-        source_url = article.get("sourceUrl")
-        if source_url is None:
-            print("Article skipped: missing sourceUrl")
-            continue
+        created_articles = []
+        errors = []
 
-        if not ArticleView.objects.filter(sourceUrl=source_url).exists():
-            try:
-                ArticleView.objects.create(
-                    title=article.get("title", "No title"),
-                    excerpt=article.get("excerpt", ""),
-                    imageUrl=article.get("imageUrl", None),
-                    category=article.get("category", None),
-                    publishedDate=article.get("publishedDate", ""),
-                    sourceUrl=source_url,
-                    ip_address=ip,
-                )
-            except Exception as e:
-                print(f"Error saving article with sourceUrl={source_url}: {e}")
+        for article in articles:
+            source_url = article.get("sourceUrl")
+            if not source_url:
+                # Можно логировать или пропустить
+                continue
 
-    return JsonResponse(articles, safe=False)
+            if not Parsing.objects.filter(sourceUrl=source_url).exists():
+                try:
+                    obj = Parsing.objects.create(
+                        title=article.get("title", "No title"),
+                        excerpt=article.get("excerpt", ""),
+                        imageUrl=article.get("image_url", None),  # исправил image_rl -> imageUrl
+                        category=article.get("category", None),
+                        publishedDate=article.get("published_date", ""),
+                        sourceUrl=source_url,
+                        ip_address=ip,
+                    )
+                    created_articles.append(obj)
+                except Exception as e:
+                    errors.append(f"Error saving article {source_url}: {e}")
 
+        serializer = ParsingSerializer(created_articles, many=True)
+        return Response({
+            "created": serializer.data,
+            "errors": errors
+        }, status=status.HTTP_201_CREATED if created_articles else status.HTTP_200_OK)
 
-def article_views_stats(request):
-    stats = ArticleView.objects.values('article_url').annotate(
-        count=models.Count('id')
-    )
-    return JsonResponse(list(stats), safe=False)
+class ArticleViewsStatsView(APIView):
+    def get(self, request, *args, **kwargs):
+        stats = Parsing.objects.values('sourceUrl').annotate(
+            count=Count('id')
+        )
+        return Response(stats)
 
+class ParsedArticlesView(APIView):
+    def get(self, request):
+        articles = Parsing.objects.all()
+        serializer = ParsingSerializer(articles, many=True)
+        return Response(serializer.data)
 
+class ParsingViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Parsing.objects.all()
+    serializer_class = ParsingSerializer

@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'apps.users',
     'apps.reference',
     'apps.pet',
-    'apps.application'
+    'apps.application',
+    'apps.parser'
 ]
 
 MIDDLEWARE = [

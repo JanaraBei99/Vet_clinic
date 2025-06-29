@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import ArticleView
+from .models import Parsing
 # Register your models here.
 
-@admin.register(ArticleView)
-class ArticleViewAdmin(admin.ModelAdmin):
+@admin.register(Parsing)
+class ParsingAdmin(admin.ModelAdmin):
     pass

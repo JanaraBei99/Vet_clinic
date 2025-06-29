@@ -1,8 +1,12 @@
-from django.urls import path
-from .views import get_article_data, article_views_stats, parse_all_articles
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import ParsingViewSet, ParsedArticlesView, ArticleDataView, ArticleViewsStatsView
+
+router = DefaultRouter()
+router.register(r'articles', ParsingViewSet, basename='articles')
 
 urlpatterns = [
-    path('article-data/', get_article_data, name='article_data'),
-    path('stats/', article_views_stats, name='article_views_stats'),
-    path('api/parse-articles/', parse_all_articles, name='parse_all_articles'),
+    path('api/article-data/', ArticleDataView.as_view(), name='article_data'),
+    path('api/stats/', ArticleViewsStatsView.as_view(), name='article_views_stats'),
+    path('api/', include(router.urls)),
 ]

@@ -13,7 +13,7 @@ def scrape_article_details():
 
     BASE_URL = "https://www.svoydoctor.ru/vladeltsam/poleznoe/stati/"
     driver.get(BASE_URL)
-    time.sleep(2)  # Подождать загрузку JS
+    time.sleep(2)
 
     articles = []
 
@@ -50,7 +50,6 @@ def scrape_article_details():
 
             articles.append(article_data)
 
-        # Ищем кнопку "следующая"
         try:
             next_button = driver.find_element(By.CSS_SELECTOR, '.pagination a.active + a')
             driver.execute_script("arguments[0].click();", next_button)

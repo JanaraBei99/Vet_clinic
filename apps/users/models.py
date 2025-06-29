@@ -6,7 +6,7 @@ from datetime import timedelta
 
 class User(AbstractUser):
     code = models.CharField(max_length=6)
-    code_created_at = models.DateTimeField(auto_now_add=True)
+    code_created_at = models.DateTimeField(default=timezone.now)
     is_used = models.BooleanField(default=False)
 
     def is_code_expired(self):
