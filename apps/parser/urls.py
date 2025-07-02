@@ -6,7 +6,7 @@ router = DefaultRouter()
 router.register(r'articles', ParsingViewSet, basename='articles')
 
 urlpatterns = [
-    path('api/article-data/', ArticleDataView.as_view(), name='article_data'),
-    path('api/stats/', ArticleViewsStatsView.as_view(), name='article_views_stats'),
-    path('api/', include(router.urls)),
+    path('article-data/', ArticleDataView.as_view(), name='article_data'),
+    path('stats/', ArticleViewsStatsView.as_view(), name='article_views_stats'),
+    path('', include(router.urls)),
 ]

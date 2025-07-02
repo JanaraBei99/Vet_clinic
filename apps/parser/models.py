@@ -7,14 +7,14 @@ class Parsing(models.Model):
     ip_address = models.GenericIPAddressField(null=True, blank=True)
     title = models.CharField(max_length=255)
     excerpt = models.TextField()
-    imageUrl = models.URLField(null=True, blank=True)
+    image_url = models.URLField(null=True, blank=True)
     category = models.CharField(max_length=100, null=True, blank=True)
-    publishedDate = models.CharField(max_length=100)
-    sourceUrl = models.URLField(unique=True)
+    published_date = models.CharField(max_length=100)
+    source_url = models.URLField(unique=True)
     viewed_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
         ordering = ['-viewed_at']
 
     def __str__(self):
-        return f"{self.title} ({self.publishedDate})"
+        return f"{self.title} ({self.published_date})"
